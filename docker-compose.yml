@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  postgres:
+    container_name: template_db
+    image: postgres:12.2
+    restart: on-failure
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: postgres
+    ports:
+      - 7550:5432
+
+  spring-app:
+    container_name: template_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 7551:7551
+    depends_on:
+      - postgres
+    environment:
+      - spring.datasource.url=jdbc:postgresql://template_db:5432/postgres
